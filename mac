@@ -193,7 +193,7 @@ install_asdf_language_version() {
 
 start_postgres_server() {
   if ! pg_ctl status | grep -Fq "server is running"; then
-    pg_ctl start
+    pg_ctl start -l "$HOME/postgres.log"
   fi
 }
 
