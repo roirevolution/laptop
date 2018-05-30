@@ -139,7 +139,6 @@ brew "yarn"
 cask "gpg-suite"
 
 # Databases
-brew "postgresql@9.6", restart_service: :changed
 brew "redis", restart_service: :changed
 EOF
 
@@ -169,8 +168,9 @@ install_asdf_plugin() {
 source "$HOME/.asdf/asdf.sh"
 install_asdf_plugin "ruby" "https://github.com/asdf-vm/asdf-ruby.git"
 install_asdf_plugin "nodejs" "https://github.com/asdf-vm/asdf-nodejs.git"
+install_asdf_plugin "postgres" "https://github.com/smashedtoatoms/asdf-postgres.git"
 
-install_asdf_language() {
+install_asdf_language_latest() {
   local language="$1"
   local version
   version="$(asdf list-all "$language" | tail -1)"
@@ -181,8 +181,24 @@ install_asdf_language() {
   fi
 }
 
+install_asdf_language_version() {
+  local language="$1"
+  local version="$2"
+
+  if ! asdf list "$language" | grep -Fq "$version"; then
+    asdf install "$language" "$version"
+    asdf global "$language" "$version"
+  fi
+}
+
+start_postgres_server() {
+  if ! pg_ctl status | grep -Fq "server is running"; then
+    pg_ctl start
+  fi
+}
+
 fancy_echo "Installing latest Ruby..."
-install_asdf_language "ruby"
+install_asdf_language_latest "ruby"
 gem update --system
 gem_install_or_update "bundler"
 number_of_cores=$(sysctl -n hw.ncpu)
@@ -190,7 +206,11 @@ bundle config --global jobs $((number_of_cores - 1))
 
 fancy_echo "Installing latest Node..."
 bash "$HOME/.asdf/plugins/nodejs/bin/import-release-team-keyring"
-install_asdf_language "nodejs"
+install_asdf_language_latest "nodejs"
+
+fancy_echo "Installing Postgres 9.6.9..."
+install_asdf_language_version "postgres" "9.6.9"
+start_postgres_server
 
 if [ -f "$HOME/.laptop.local" ]; then
   fancy_echo "Running your customizations from ~/.laptop.local ..."
