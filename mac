@@ -141,6 +141,10 @@ cask "gpg-suite"
 # Databases
 brew "postgresql@9.6", restart_service: :changed
 brew "redis", restart_service: :changed
+
+# App-specific requirements
+## Edge
+brew "cmake"
 EOF
 
 if brew list | grep --silent "qt@5.5"; then
