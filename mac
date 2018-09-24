@@ -114,6 +114,8 @@ tap "caskroom/cask"
 # Unix
 brew "universal-ctags", args: ["HEAD"]
 brew "git"
+# git customization
+git config --global merge.conflictstyle diff3
 brew "openssl"
 brew "rcm"
 brew "reattach-to-user-namespace"
