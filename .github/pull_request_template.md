@@ -12,4 +12,4 @@
 - [ ] relevant metrics added
 - [ ] I've set up a reminder to set up dashboards and alerts (as needed) in Datadog once metrics start recording data
 - [ ] no style issues
-- [ ] documentation added/updated as necessary (go [here](https://docs.google.com/document/d/1JbH1-_GTI8MbIO-_PqKzOC-CQDq-5nO9i3indW8R76s/edit#) for a starting point)
+- [ ] documentation added/updated as necessary (using [tags](https://docs.google.com/document/d/1OFrkFQHIA7ucvHyE5EqAnkPuWwGwQ04CYFD0VpF7Xhs/edit) on Drive should make this easier)
