@@ -115,7 +115,6 @@ tap "caskroom/cask"
 brew "universal-ctags", args: ["HEAD"]
 brew "git"
 # git customization
-git config --global merge.conflictstyle diff3
 brew "openssl"
 brew "rcm"
 brew "reattach-to-user-namespace"
@@ -155,11 +154,15 @@ if brew list | grep --silent "qt@5.5"; then
   brew link --force qt@5.5
 fi
 
+if [ "$(which psql)" == "" ] ; then
+  fancy_echo "'psql' not found in PATH, attempting to add it..."
+  append_to_bash_profile 'export PATH="/usr/local/opt/postgresql@9.6/bin:$PATH"'
+fi
+
 fancy_echo "Configuring asdf version manager..."
 if [ ! -d "$HOME/.asdf" ]; then
   git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.4.2
-  append_to_bash_profile "source $HOME/.asdf/asdf.sh" 1
-  append_to_bash_profile "source $HOME/.asdf/completions/asdf.bash" 1
+  append_to_bash_profile 'export PATH="$HOME/.asdf/shims:$HOME/.asdf/bin:$PATH"' 1
 fi
 
 install_asdf_plugin() {
@@ -186,17 +189,6 @@ install_asdf_language() {
     asdf global "$language" "$version"
   fi
 }
-
-fancy_echo "Installing latest Ruby..."
-install_asdf_language "ruby"
-gem update --system
-gem_install_or_update "bundler"
-number_of_cores=$(sysctl -n hw.ncpu)
-bundle config --global jobs $((number_of_cores - 1))
-
-fancy_echo "Installing latest Node..."
-bash "$HOME/.asdf/plugins/nodejs/bin/import-release-team-keyring"
-install_asdf_language "nodejs"
 
 if [ -f "$HOME/.laptop.local" ]; then
   fancy_echo "Running your customizations from ~/.laptop.local ..."
