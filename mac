@@ -162,8 +162,7 @@ fi
 fancy_echo "Configuring asdf version manager..."
 if [ ! -d "$HOME/.asdf" ]; then
   git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.4.2
-  append_to_bash_profile "source $HOME/.asdf/asdf.sh" 1
-  append_to_bash_profile "source $HOME/.asdf/completions/asdf.bash" 1
+  append_to_bash_profile 'export PATH="$HOME/.asdf/shims:$HOME/.asdf/bin:$PATH"' 1
 fi
 
 install_asdf_plugin() {
