@@ -146,6 +146,9 @@ brew "redis", restart_service: :changed
 # App-specific requirements
 ## Edge
 brew "cmake"
+
+## Push (for Python)
+brew "zlib"
 EOF
 
 if brew list | grep --silent "qt@5.5"; then
@@ -157,6 +160,11 @@ fi
 if [ "$(which psql)" == "" ] ; then
   fancy_echo "'psql' not found in PATH, attempting to add it..."
   append_to_bash_profile 'export PATH="/usr/local/opt/postgresql@9.6/bin:$PATH"'
+fi
+
+if [ "$(echo $CPPFLAGS)" == "" ] ; then
+  fancy_echo "Your 'CPPFLAGS' env. variable (required for zlib) is not set. Adding to '~/.bash_profile'..."
+  append_to_bash_profile 'export CPPFLAGS="-I/usr/local/opt/zlib/include"'
 fi
 
 fancy_echo "Configuring asdf version manager..."
